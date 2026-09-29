@@ -39,7 +39,13 @@ for hashtag in args.hashtags:
     axis.plot(days, [counts[hashtag].get(d, 0) for d in days], linewidth=1.5,
               label=display_names.get(hashtag, hashtag))
 axis.set_title("Daily tweets using each hashtag in 2020")
-axis.set_xlabel("Day of the year (2020)")
+
+# Label the x-axis with month names instead of day numbers.
+month_starts = [datetime.date(2020, m, 1).timetuple().tm_yday for m in range(1, 13)]
+month_names = [datetime.date(2020, m, 1).strftime("%b") for m in range(1, 13)]
+axis.set_xticks(month_starts)
+axis.set_xticklabels(month_names)
+axis.set_xlabel("Month (2020)")
 axis.set_ylabel("Number of tweets")
 axis.set_xlim(1, 366)
 axis.grid(alpha=0.25)
