@@ -40,15 +40,22 @@ for hashtag in args.hashtags:
               label=display_names.get(hashtag, hashtag))
 axis.set_title("Daily tweets using each hashtag in 2020")
 
-# Label the x-axis with month names instead of day numbers.
-month_starts = [datetime.date(2020, m, 1).timetuple().tm_yday for m in range(1, 13)]
+# Month boundaries as grid lines, month names centered in each month.
+month_starts = [datetime.date(2020, m, 1).timetuple().tm_yday for m in range(1, 13)] + [367]
 month_names = [datetime.date(2020, m, 1).strftime("%b") for m in range(1, 13)]
-axis.set_xticks(month_starts)
+month_middles = [(a + b) / 2 for a, b in zip(month_starts[:-1], month_starts[1:])]
+axis.set_xticks(month_starts, minor=True)
+axis.set_xticks(month_middles)
 axis.set_xticklabels(month_names)
+axis.tick_params(axis="x", which="major", length=0)
+axis.tick_params(axis="x", which="minor", length=6)
+axis.grid(axis="x", which="minor", alpha=0.35)
+axis.grid(axis="x", which="major", visible=False)
+
 axis.set_xlabel("Month (2020)")
 axis.set_ylabel("Number of tweets")
-axis.set_xlim(1, 366)
-axis.grid(alpha=0.25)
+axis.set_xlim(1, 367)
+axis.grid(axis="y", alpha=0.25)
 axis.legend()
 figure.tight_layout()
 output_path = Path(args.output_path)
