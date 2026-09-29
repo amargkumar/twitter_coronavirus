@@ -40,21 +40,15 @@ for hashtag in args.hashtags:
               label=display_names.get(hashtag, hashtag))
 axis.set_title("Daily tweets using each hashtag in 2020")
 
-# Month boundaries as grid lines, month names centered in each month.
-month_starts = [datetime.date(2020, m, 1).timetuple().tm_yday for m in range(1, 13)] + [367]
-month_names = [datetime.date(2020, m, 1).strftime("%b") for m in range(1, 13)]
-month_middles = [(a + b) / 2 for a, b in zip(month_starts[:-1], month_starts[1:])]
-axis.set_xticks(month_starts, minor=True)
-axis.set_xticks(month_middles)
-axis.set_xticklabels(month_names)
-axis.tick_params(axis="x", which="major", length=0)
-axis.tick_params(axis="x", which="minor", length=6)
-axis.grid(axis="x", which="minor", alpha=0.35)
-axis.grid(axis="x", which="major", visible=False)
+# Label the x-axis with dates: Jan 1, Feb 1, ... Dec 1, and Dec 31 at the end.
+tick_dates = [datetime.date(2020, m, 1) for m in range(1, 13)] + [datetime.date(2020, 12, 31)]
+axis.set_xticks([d.timetuple().tm_yday for d in tick_dates])
+axis.set_xticklabels([f"{d:%b} {d.day}" for d in tick_dates], rotation=45, ha="right")
+axis.grid(axis="x", alpha=0.35)
 
-axis.set_xlabel("Month (2020)")
+axis.set_xlabel("Date (2020)")
 axis.set_ylabel("Number of tweets")
-axis.set_xlim(1, 367)
+axis.set_xlim(1, 366)
 axis.grid(axis="y", alpha=0.25)
 axis.legend()
 figure.tight_layout()
